@@ -31,9 +31,8 @@ public class ServerDBContext extends DBContext {
                     + "      ,[rcon_password]\n"
                     + "      ,[date_created]\n"
                     + "      ,[is_active]\n"
-                    + "      ,Admins.username as created_by\n"
-                    + "  FROM [dbo].[Servers] INNER JOIN Admins \n"
-                    + "  ON Servers.created_by = Admins.admin_id";
+                    + "      ,[server_name]\n"
+                    + "  FROM [dbo].[Servers]";
             PreparedStatement stm = connection.prepareStatement(sql);
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
@@ -45,11 +44,7 @@ public class ServerDBContext extends DBContext {
                 s.setRconPassword(rs.getString("rcon_password"));
                 s.setCreatedDate(rs.getDate("date_created"));
                 s.setIsActive(rs.getBoolean("is_active"));
-                
-                Admin a = new Admin();
-                a.setUsername(rs.getString("created_by"));
-                s.setAdmin(a);
-                
+                s.setserverName(rs.getString("server_name"));
                 servers.add(s);
             }
             return servers;
@@ -59,4 +54,28 @@ public class ServerDBContext extends DBContext {
         return null;
     }
 
+    public ArrayList<Server> getActiveServers() {
+        ArrayList<Server> servers = new ArrayList<>();
+        try {
+            String sql = "SELECT [server_id]\n"
+                    + "      ,[server_ip]\n"
+                    + "      ,[server_port]\n"
+                    + "  FROM [dbo].[Servers]\n"
+                    + "  WHERE\n"
+                    + "  is_active = 1";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                Server s = new Server();
+                s.setId(rs.getInt("server_id"));
+                s.setIp(rs.getString("server_ip"));
+                s.setPort(rs.getString("server_port"));
+                servers.add(s);
+            }
+            return servers;
+        } catch (SQLException ex) {
+            Logger.getLogger(ServerDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
 }

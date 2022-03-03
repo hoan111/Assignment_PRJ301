@@ -5,26 +5,28 @@
  */
 package Model;
 
-import java.util.Date;
+import java.sql.Date;
 
 /**
  *
  * @author hoan
  */
 public class Server {
-    private String id;
+
+    private int id;
     private String ip;
     private String port;
     private String serverPassword;
     private String rconPassword;
     private Date createdDate;
     private boolean isActive;
+    private String serverName;
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -75,6 +77,12 @@ public class Server {
     public void setIsActive(boolean isActive) {
         this.isActive = isActive;
     }
-    
-    
+
+    public String getserverName() {
+        return serverName;
+    }
+
+    public void setserverName(String serverName) {
+        this.serverName = serverName;
+    }
 }
