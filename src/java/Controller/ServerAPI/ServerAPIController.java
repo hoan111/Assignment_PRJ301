@@ -5,6 +5,7 @@
  */
 package Controller.ServerAPI;
 
+import Controller.Login.BaseAuthController;
 import Model.Server;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -22,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author hoan
  */
-public class ServerAPIController extends HttpServlet {
+public class ServerAPIController extends BaseAuthController {
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -34,7 +35,7 @@ public class ServerAPIController extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected void processGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         ServerDBContext ServerDB = new ServerDBContext();
 
@@ -59,7 +60,7 @@ public class ServerAPIController extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    protected void processPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
     }

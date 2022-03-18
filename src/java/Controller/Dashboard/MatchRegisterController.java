@@ -7,7 +7,9 @@ package Controller.Dashboard;
 
 import Controller.Login.BaseAuthController;
 import Model.Account;
+import Model.Match;
 import Model.Server;
+import dal.MatchDBContext;
 import dal.ServerDBContext;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -21,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author hoan
  */
-public class ViewServerListController extends BaseAuthController {
+public class MatchRegisterController extends BaseAuthController {
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -35,10 +37,11 @@ public class ViewServerListController extends BaseAuthController {
     @Override
     protected void processGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-            ServerDBContext serverDB = new ServerDBContext();
-            ArrayList<Server> servers = serverDB.getAllServers();
-            request.setAttribute("servers", servers);
-            request.getRequestDispatcher("../Dashboard/Server.jsp").forward(request, response);
+        ServerDBContext serverDB = new ServerDBContext();
+
+        ArrayList<Server> activeServers = serverDB.getActiveServers();
+        request.setAttribute("activeServers", activeServers);
+        request.getRequestDispatcher("../Dashboard/RegisterMatch.jsp").forward(request, response);
     }
 
     /**
@@ -52,7 +55,22 @@ public class ViewServerListController extends BaseAuthController {
     @Override
     protected void processPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.sendRedirect("404.html");
+        MatchDBContext matchDB = new MatchDBContext();
+        int serverID = Integer.parseInt(request.getParameter("selectServer"));
+        int type = Integer.parseInt(request.getParameter("selectMatchType"));
+        String facebook = request.getParameter("facebookLink");
+        double price = Double.parseDouble(request.getParameter("price"));
+        Account a = (Account) request.getSession().getAttribute("user");
+        try {
+            matchDB.registerMatch(serverID, type, price, facebook, a.getId());
+            request.setAttribute("isSuccess", true);
+            request.setAttribute("msg", "Match has been registered successfully!");
+            request.getRequestDispatcher("../Dashboard/RegisterMatch.jsp").forward(request, response);
+        } catch (Exception e) {
+            request.setAttribute("isSuccess", false);
+            request.setAttribute("msg", "Register match failed");
+            request.getRequestDispatcher("../Dashboard/RegisterMatch.jsp").forward(request, response);
+        }
     }
 
     /**

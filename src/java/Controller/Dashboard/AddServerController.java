@@ -6,14 +6,11 @@
 package Controller.Dashboard;
 
 import Controller.Login.BaseAuthController;
-import Model.Account;
 import Model.Server;
 import dal.ServerDBContext;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -21,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author hoan
  */
-public class ViewServerListController extends BaseAuthController {
+public class AddServerController extends BaseAuthController {
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -35,10 +32,10 @@ public class ViewServerListController extends BaseAuthController {
     @Override
     protected void processGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-            ServerDBContext serverDB = new ServerDBContext();
-            ArrayList<Server> servers = serverDB.getAllServers();
-            request.setAttribute("servers", servers);
-            request.getRequestDispatcher("../Dashboard/Server.jsp").forward(request, response);
+        ServerDBContext serverDB = new ServerDBContext();
+        ArrayList<Server> servers = serverDB.getAllServers();
+        request.setAttribute("servers", servers);
+        request.getRequestDispatcher("../Dashboard/AddServer.jsp").forward(request, response);
     }
 
     /**
@@ -52,7 +49,23 @@ public class ViewServerListController extends BaseAuthController {
     @Override
     protected void processPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.sendRedirect("404.html");
+        String serverName = (String) request.getParameter("serverName");
+        String serverIP = (String) request.getParameter("serverIP");
+        String serverPort = (String) request.getParameter("serverPort");
+        String serverPassword = (String) request.getParameter("serverPassword");
+        String rcon = (String) request.getParameter("rconPassword");
+
+        try {
+            ServerDBContext serverDB = new ServerDBContext();
+            serverDB.addServers(serverName, serverIP, serverPort, serverPassword, rcon);
+            request.setAttribute("isSuccess", true);
+            request.setAttribute("msg", "Server added successfully!");
+            request.getRequestDispatcher("../Dashboard/AddServer.jsp").forward(request, response);
+        } catch (Exception e) {
+            request.setAttribute("isSuccess", false);
+            request.setAttribute("msg", "Failed to add new server!");
+            request.getRequestDispatcher("../Dashboard/AddServer.jsp").forward(request, response);
+        }
     }
 
     /**

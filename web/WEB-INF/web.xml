@@ -9,14 +9,6 @@
         <servlet-class>Controller.ServerAPI.ServerAPIController</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>CreateMatch</servlet-name>
-        <servlet-class>Controller.API.Match.CreateMatch</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>RegisterMatch</servlet-name>
-        <servlet-class>Controller.API.Match.RegisterMatch</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>GetAllActiveServerAPI</servlet-name>
         <servlet-class>Controller.ServerAPI.GetAllActiveServerAPI</servlet-class>
     </servlet>
@@ -36,6 +28,66 @@
         <servlet-name>ViewServerListController</servlet-name>
         <servlet-class>Controller.Dashboard.ViewServerListController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AddServerController</servlet-name>
+        <servlet-class>Controller.Dashboard.AddServerController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>EditServerController</servlet-name>
+        <servlet-class>Controller.Dashboard.EditServerController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeleteServerController</servlet-name>
+        <servlet-class>Controller.Dashboard.DeleteServerController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>MatchRegisterController</servlet-name>
+        <servlet-class>Controller.Dashboard.MatchRegisterController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>MatchOrders</servlet-name>
+        <servlet-class>Controller.Dashboard.MatchOrdersController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>EditMatchOrdersController</servlet-name>
+        <servlet-class>Controller.Dashboard.EditMatchOrdersController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeleteMatchOrderController</servlet-name>
+        <servlet-class>Controller.Dashboard.DeleteMatchOrderController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>MatchHistoryController</servlet-name>
+        <servlet-class>Controller.Dashboard.MatchHistoryController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CheckMatchAPI</servlet-name>
+        <servlet-class>Controller.API.Match.GetMatchConfig</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>InsertNewMatch</servlet-name>
+        <servlet-class>Controller.API.Match.InsertNewMatch</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdateMatch</servlet-name>
+        <servlet-class>Controller.API.Match.UpdateMatch</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CreateAccountController</servlet-name>
+        <servlet-class>Controller.Dashboard.CreateAccountController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ViewAccountController</servlet-name>
+        <servlet-class>Controller.Dashboard.ViewAccountController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>EditAccountController</servlet-name>
+        <servlet-class>Controller.Dashboard.EditAccountController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeleteAdminController</servlet-name>
+        <servlet-class>Controller.Dashboard.DeleteAdminController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>MatchAPIController</servlet-name>
         <url-pattern>/api/match</url-pattern>
@@ -43,14 +95,6 @@
     <servlet-mapping>
         <servlet-name>ServerAPIController</servlet-name>
         <url-pattern>/api/servers</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>CreateMatch</servlet-name>
-        <url-pattern>/api/match/create</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>RegisterMatch</servlet-name>
-        <url-pattern>/api/match/register</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>GetAllActiveServerAPI</servlet-name>
@@ -71,6 +115,66 @@
     <servlet-mapping>
         <servlet-name>ViewServerListController</servlet-name>
         <url-pattern>/server/list</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddServerController</servlet-name>
+        <url-pattern>/server/add</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EditServerController</servlet-name>
+        <url-pattern>/server/edit</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteServerController</servlet-name>
+        <url-pattern>/server/delete</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>MatchRegisterController</servlet-name>
+        <url-pattern>/match/register</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>MatchOrders</servlet-name>
+        <url-pattern>/match/orders</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EditMatchOrdersController</servlet-name>
+        <url-pattern>/match/order/edit</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteMatchOrderController</servlet-name>
+        <url-pattern>/match/order/delete</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>MatchHistoryController</servlet-name>
+        <url-pattern>/match/history</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CheckMatchAPI</servlet-name>
+        <url-pattern>/api/match/check-match-info</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>InsertNewMatch</servlet-name>
+        <url-pattern>/api/match/insert</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateMatch</servlet-name>
+        <url-pattern>/api/match/update</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CreateAccountController</servlet-name>
+        <url-pattern>/account/create</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewAccountController</servlet-name>
+        <url-pattern>/account/view</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EditAccountController</servlet-name>
+        <url-pattern>/account/edit</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteAdminController</servlet-name>
+        <url-pattern>/account/delete</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

@@ -1,71 +1,68 @@
+<%-- 
+    Document   : ViewAccount
+    Created on : Mar 17, 2022, 4:41:47 PM
+    Author     : hoan
+--%>
+
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <t:wrapper>
-    <jsp:attribute name="pageTitle">Server list</jsp:attribute>
+    <jsp:attribute name="pageTitle">Account list</jsp:attribute>
     <jsp:body>
         <div class="container-fluid px-4">
-            <h1 class="mt-4">Server list</h1>
+            <h1 class="mt-4">Account list</h1>
             <ol class="breadcrumb mb-4">
                 <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/dashboard">Dashboard</a></li>
-                <li class="breadcrumb-item active">Server list</li>
+                <li class="breadcrumb-item active">Account list</li>
             </ol>
             <div class="card mb-4">
                 <div class="card-header">
                     <i class="fas fa-table me-1"></i>
-                    Current game server list
+                    Account list
                 </div>
                 <div class="card-body">
                     <table id="datatablesSimple">
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Server name</th>
-                                <th>IP</th>
-                                <th>Port</th>
-                                <th>Password</th>
-                                <th>RCON</th>
-                                <th>Created date</th>
-                                <th>Status</th>
+                                <th>AccountID</th>
+                                <th>Username</th>
+                                <th>API key</th>
+                                <th>Role</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tfoot>
                             <tr>
-                                <th>ID</th>
-                                <th>Server name</th>
-                                <th>IP</th>
-                                <th>Port</th>
-                                <th>Password</th>
-                                <th>RCON</th>
-                                <th>Created date</th>
-                                <th>Status</th>
+                                <th>AccountID</th>
+                                <th>Username</th>
+                                <th>API key</th>
+                                <th>Role</th>
                                 <th>Action</th>
                             </tr>
                         </tfoot>
                         <tbody>
-                            <c:forEach items="${requestScope.servers}" var="s">
-                                <tr id="rowid${s.id}">
-                                    <td id = "${s.id}">${s.id}</td>
-                                    <td>${s.serverName}</td>
-                                    <td>${s.ip}</td>
-                                    <td>${s.port}</td>
-                                    <td>${s.serverPassword}</td>>
-                                    <td>${s.rconPassword}</td>
-                                    <td>${s.createdDate}</td>
-                                    <c:if test="${s.isActive == true}">
+                            <c:forEach items="${requestScope.accounts}" var="a">
+                                <tr id="rowid${a.id}">
+                                    <td>${a.id}</td>
+                                    <td>${a.username}</td>
+                                    <td>${a.apikey}</td>
+                                    <c:if test="${a.role == 2}">
                                         <td>
-                                            <span class="badge bg-success">Active</span>
+                                            Moderator
                                         </td>
                                     </c:if>
-                                    <c:if test="${s.isActive == false}">
+                                    <c:if test="${a.role == 1}">
                                         <td>
-                                            <span class="badge bg-info">In-use</span>
+                                            Administrator
                                         </td>
                                     </c:if>
                                     <td>
-                                        <a type="button" class="btn btn-dark btn-sm" href="${pageContext.request.contextPath}/server/edit?id=${s.id}">Edit</a>
-                                        <button type="button" class="btn btn-danger confirm-delete btn-sm" id="${s.id}" data-toggle="modal" data-target="#myModal">Delete</button>
+                                        <a type="button" class="btn btn-dark btn-sm" href="${pageContext.request.contextPath}/account/edit?id=${a.id}">Edit</a>
+                                        <c:if test="${a.id != 1}">
+                                            <button type="button" class="btn btn-danger confirm-delete btn-sm" id="${a.id}" data-toggle="modal" data-target="#myModal">Delete</button>
+                                        </c:if>
                                     </td>
                                 </c:forEach>
                             </tr>
@@ -78,7 +75,7 @@
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Delete Server</h5>
+                            <h5 class="modal-title" id="exampleModalLabel">Delete Account</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -86,7 +83,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button id="btnDeleteServer" type="button" class="btn btn-danger">Confirm delete</button>
+                            <button id="deleteAccountbtn" type="button" class="btn btn-danger">Confirm delete</button>
                         </div>
                     </div>
                 </div>

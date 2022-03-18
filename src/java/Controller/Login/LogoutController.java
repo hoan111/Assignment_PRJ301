@@ -3,16 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Controller.Dashboard;
+package Controller.Login;
 
-import Controller.Login.BaseAuthController;
-import Model.Account;
-import Model.Server;
-import dal.ServerDBContext;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,7 +17,31 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author hoan
  */
-public class ViewServerListController extends BaseAuthController {
+@WebServlet(name = "LogoutController", urlPatterns = {"/logout"})
+public class LogoutController extends HttpServlet {
+
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        if(request.getSession().getAttribute("user") != null)
+        {
+            request.getSession().invalidate();
+            request.getSession().setAttribute("msg", "You logged out from your session!");
+            response.sendRedirect(request.getContextPath() + "/login");
+        }
+        else
+        {
+            response.sendRedirect("401.html");
+        }
+    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -33,12 +53,9 @@ public class ViewServerListController extends BaseAuthController {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void processGet(HttpServletRequest request, HttpServletResponse response)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-            ServerDBContext serverDB = new ServerDBContext();
-            ArrayList<Server> servers = serverDB.getAllServers();
-            request.setAttribute("servers", servers);
-            request.getRequestDispatcher("../Dashboard/Server.jsp").forward(request, response);
+        processRequest(request, response);
     }
 
     /**
@@ -50,9 +67,9 @@ public class ViewServerListController extends BaseAuthController {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void processPost(HttpServletRequest request, HttpServletResponse response)
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.sendRedirect("404.html");
+        processRequest(request, response);
     }
 
     /**

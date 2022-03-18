@@ -5,6 +5,7 @@
  */
 package Controller.Dashboard;
 
+import Controller.Login.BaseAuthController;
 import Model.Account;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -17,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author hoan
  */
-public class MainDashboardController extends HttpServlet {
+public class MainDashboardController extends BaseAuthController {
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -29,17 +30,9 @@ public class MainDashboardController extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected void processGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Account a = (Account)request.getSession().getAttribute("user");
-        if(a != null)
-        {
             request.getRequestDispatcher("Dashboard/Dashboard.jsp").forward(request, response);
-        }
-        else
-        {
-            response.sendRedirect("401.html");
-        }
     }
 
     /**
@@ -51,7 +44,7 @@ public class MainDashboardController extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    protected void processPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.sendRedirect("404.html");
     }

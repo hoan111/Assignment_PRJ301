@@ -6,9 +6,8 @@
 package Controller.Dashboard;
 
 import Controller.Login.BaseAuthController;
-import Model.Account;
-import Model.Server;
-import dal.ServerDBContext;
+import Model.MatchHistory;
+import dal.MatchDBContext;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -21,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author hoan
  */
-public class ViewServerListController extends BaseAuthController {
+public class MatchHistoryController extends BaseAuthController {
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -35,10 +34,11 @@ public class ViewServerListController extends BaseAuthController {
     @Override
     protected void processGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-            ServerDBContext serverDB = new ServerDBContext();
-            ArrayList<Server> servers = serverDB.getAllServers();
-            request.setAttribute("servers", servers);
-            request.getRequestDispatcher("../Dashboard/Server.jsp").forward(request, response);
+        MatchDBContext matchDB = new MatchDBContext();
+        ArrayList<MatchHistory> mh = matchDB.getMatchHistory();
+
+        request.setAttribute("matchhistory", mh);
+        request.getRequestDispatcher("../Dashboard/MatchHistory.jsp").forward(request, response);
     }
 
     /**
@@ -52,7 +52,6 @@ public class ViewServerListController extends BaseAuthController {
     @Override
     protected void processPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.sendRedirect("404.html");
     }
 
     /**

@@ -32,7 +32,12 @@ public class LoginController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("Login/Login.jsp").forward(request, response);
+        Account a = (Account) request.getSession().getAttribute("user");
+        if (a != null) {
+            response.sendRedirect(request.getContextPath() + "/dashboard");
+        } else {
+            request.getRequestDispatcher("Login/Login.jsp").forward(request, response);
+        }
     }
 
     /**
@@ -46,20 +51,17 @@ public class LoginController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String username = (String)request.getParameter("username");
-        String password = (String)request.getParameter("password");
-        
+        String username = (String) request.getParameter("username");
+        String password = (String) request.getParameter("password");
+
         AccountDBContext AccountDB = new AccountDBContext();
         Account a = AccountDB.getAccount(username, password);
-        
-        if(a != null)
-        {
+
+        if (a != null) {
             request.getSession().setAttribute("user", a);
             response.sendRedirect(request.getContextPath() + "/dashboard");
-        }
-        else
-        {
-            request.setAttribute("msg", "Incorrect login information. Please try again!");
+        } else {
+            request.getSession().setAttribute("msg", "Incorrect login information. Please try again!");
             request.getRequestDispatcher("Login/Login.jsp").forward(request, response);
         }
     }

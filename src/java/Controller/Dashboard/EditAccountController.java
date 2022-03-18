@@ -7,11 +7,9 @@ package Controller.Dashboard;
 
 import Controller.Login.BaseAuthController;
 import Model.Account;
-import Model.Server;
-import dal.ServerDBContext;
+import dal.AccountDBContext;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -21,7 +19,9 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author hoan
  */
-public class ViewServerListController extends BaseAuthController {
+public class EditAccountController extends BaseAuthController {
+
+    private static int rawid = 0;
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -35,10 +35,16 @@ public class ViewServerListController extends BaseAuthController {
     @Override
     protected void processGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-            ServerDBContext serverDB = new ServerDBContext();
-            ArrayList<Server> servers = serverDB.getAllServers();
-            request.setAttribute("servers", servers);
-            request.getRequestDispatcher("../Dashboard/Server.jsp").forward(request, response);
+        AccountDBContext accountDB = new AccountDBContext();
+        rawid = Integer.parseInt(request.getParameter("id"));
+        Account a = accountDB.getAccountbyID(rawid);
+
+        if (a != null) {
+            request.setAttribute("account", a);
+            request.getRequestDispatcher("../Dashboard/EditAccount.jsp").forward(request, response);
+        } else {
+            response.sendRedirect(request.getServletContext() + "/account/view");
+        }
     }
 
     /**
@@ -52,7 +58,21 @@ public class ViewServerListController extends BaseAuthController {
     @Override
     protected void processPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.sendRedirect("404.html");
+        String username = request.getParameter("Username");
+        String password = request.getParameter("PasswordEdit");
+        int role = Integer.parseInt(request.getParameter("role"));
+        String apikey = request.getParameter("apikey");
+
+        AccountDBContext accountDB = new AccountDBContext();
+        if (accountDB.updateAccount(rawid, username, password, role, apikey)) {
+            request.setAttribute("isSuccess", true);
+            request.setAttribute("msg", "Account edited successfully!");
+            request.getRequestDispatcher("../Dashboard/EditAccount.jsp").forward(request, response);
+        } else {
+            request.setAttribute("isSuccess", false);
+            request.setAttribute("msg", "Edit account failed because an error occured!");
+            request.getRequestDispatcher("../Dashboard/EditAccount.jsp").forward(request, response);
+        }
     }
 
     /**

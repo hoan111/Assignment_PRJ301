@@ -6,12 +6,13 @@
 package Controller.Dashboard;
 
 import Controller.Login.BaseAuthController;
-import Model.Account;
-import Model.Server;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import dal.MatchDBContext;
 import dal.ServerDBContext;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -21,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author hoan
  */
-public class ViewServerListController extends BaseAuthController {
+public class DeleteMatchOrderController extends BaseAuthController {
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -35,10 +36,6 @@ public class ViewServerListController extends BaseAuthController {
     @Override
     protected void processGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-            ServerDBContext serverDB = new ServerDBContext();
-            ArrayList<Server> servers = serverDB.getAllServers();
-            request.setAttribute("servers", servers);
-            request.getRequestDispatcher("../Dashboard/Server.jsp").forward(request, response);
     }
 
     /**
@@ -52,7 +49,22 @@ public class ViewServerListController extends BaseAuthController {
     @Override
     protected void processPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.sendRedirect("404.html");
+        int id = Integer.parseInt(request.getParameter("id"));
+
+        MatchDBContext matchDB = new MatchDBContext();
+        if (matchDB.deleteMatchOrder(id)) {
+            JsonObject jsonobj = new JsonObject();
+            jsonobj.addProperty("msg", "Server deleted successfully!");
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            response.setStatus(200);
+            response.getWriter().println(gson.toJson(jsonobj).toString());
+        } else {
+            JsonObject jsonobj = new JsonObject();
+            jsonobj.addProperty("msg", "An error occured when delete a server!");
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            response.setStatus(500);
+            response.getWriter().println(gson.toJson(jsonobj).toString());
+        }
     }
 
     /**

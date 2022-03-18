@@ -5,9 +5,7 @@
  */
 package dal;
 
-import Model.Admin;
 import Model.Server;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -60,6 +58,7 @@ public class ServerDBContext extends DBContext {
             String sql = "SELECT [server_id]\n"
                     + "      ,[server_ip]\n"
                     + "      ,[server_port]\n"
+                    + "      ,[server_name]\n"
                     + "  FROM [dbo].[Servers]\n"
                     + "  WHERE\n"
                     + "  is_active = 1";
@@ -70,6 +69,7 @@ public class ServerDBContext extends DBContext {
                 s.setId(rs.getInt("server_id"));
                 s.setIp(rs.getString("server_ip"));
                 s.setPort(rs.getString("server_port"));
+                s.setserverName(rs.getString("server_name"));
                 servers.add(s);
             }
             return servers;
@@ -77,5 +77,114 @@ public class ServerDBContext extends DBContext {
             Logger.getLogger(ServerDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+
+    public void addServers(String serverName, String ip, String port, String password, String rcon) {
+        try {
+            String sql = "INSERT INTO [dbo].[Servers]\n"
+                    + "           ([server_name]\n"
+                    + "           ,[server_ip]\n"
+                    + "           ,[server_port]\n"
+                    + "           ,[server_password]\n"
+                    + "           ,[rcon_password])\n"
+                    + "     VALUES\n"
+                    + "           (?\n"
+                    + "           ,?\n"
+                    + "           ,?\n"
+                    + "           ,?\n"
+                    + "           ,?)";
+            PreparedStatement stm = connection.prepareStatement(sql);
+
+            stm.setString(1, serverName);
+            stm.setString(2, ip);
+            stm.setString(3, port);
+            stm.setString(4, password);
+            stm.setString(5, rcon);
+
+            stm.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(ServerDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public Server getServerbyID(int id) {
+        try {
+            String sql = "SELECT [server_id]\n"
+                    + "      ,[server_ip]\n"
+                    + "      ,[server_port]\n"
+                    + "      ,[rcon_password]\n"
+                    + "      ,[server_password]\n"
+                    + "      ,[server_name]\n"
+                    + "  FROM [dbo].[Servers]\n"
+                    + "  WHERE [server_id] = ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, id);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                Server s = new Server();
+                s.setId(rs.getInt("server_id"));
+                s.setserverName(rs.getString("server_name"));
+                s.setIp(rs.getString("server_ip"));
+                s.setPort(rs.getString("server_port"));
+                s.setServerPassword(rs.getString("server_password"));
+                s.setRconPassword(rs.getString("rcon_password"));
+                return s;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ServerDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    public void updateServer(int id, String server_name, String IP, String port, String serverPassword, String rcon) {
+        try {
+            String sql = "UPDATE [dbo].[Servers]\n"
+                    + "   SET [server_name] = ?\n"
+                    + "      ,[server_ip] = ?\n"
+                    + "      ,[server_port] = ?\n"
+                    + "      ,[server_password] = ?\n"
+                    + "      ,[rcon_password] = ?\n"
+                    + " WHERE server_id = ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, server_name);
+            stm.setString(2, IP);
+            stm.setString(3, port);
+            stm.setString(4, serverPassword);
+            stm.setString(5, rcon);
+            stm.setInt(6, id);
+            stm.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(ServerDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public boolean deleteServer(int id) {
+        String sql = "DELETE Servers"
+                + " WHERE [server_id] = ?";
+        PreparedStatement stm = null;
+        try {
+            stm = connection.prepareStatement(sql);
+            stm.setInt(1, id);
+            stm.executeUpdate();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(ServerDBContext.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        } finally {
+            if (stm != null) {
+                try {
+                    stm.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(ServerDBContext.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(ServerDBContext.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
     }
 }

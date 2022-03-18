@@ -1,72 +1,69 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <t:wrapper>
-    <jsp:attribute name="pageTitle">Server list</jsp:attribute>
+    <jsp:attribute name="pageTitle">Match history</jsp:attribute>
     <jsp:body>
         <div class="container-fluid px-4">
-            <h1 class="mt-4">Server list</h1>
+            <h1 class="mt-4">Match history</h1>
             <ol class="breadcrumb mb-4">
                 <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/dashboard">Dashboard</a></li>
-                <li class="breadcrumb-item active">Server list</li>
+                <li class="breadcrumb-item active">Match history</li>
             </ol>
             <div class="card mb-4">
                 <div class="card-header">
                     <i class="fas fa-table me-1"></i>
-                    Current game server list
+                    Match history list
                 </div>
                 <div class="card-body">
                     <table id="datatablesSimple">
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Server name</th>
-                                <th>IP</th>
-                                <th>Port</th>
-                                <th>Password</th>
-                                <th>RCON</th>
-                                <th>Created date</th>
-                                <th>Status</th>
-                                <th>Action</th>
+                                <th>MatchID</th>
+                                <th>OrderID</th>
+                                <th>Start time</th>
+                                <th>End time</th>
+                                <th>State</th>
                             </tr>
                         </thead>
                         <tfoot>
                             <tr>
-                                <th>ID</th>
-                                <th>Server name</th>
-                                <th>IP</th>
-                                <th>Port</th>
-                                <th>Password</th>
-                                <th>RCON</th>
-                                <th>Created date</th>
-                                <th>Status</th>
-                                <th>Action</th>
+                                <th>MatchID</th>
+                                <th>OrderID</th>
+                                <th>Start time</th>
+                                <th>End time</th>
+                                <th>State</th>
                             </tr>
                         </tfoot>
                         <tbody>
-                            <c:forEach items="${requestScope.servers}" var="s">
-                                <tr id="rowid${s.id}">
-                                    <td id = "${s.id}">${s.id}</td>
-                                    <td>${s.serverName}</td>
-                                    <td>${s.ip}</td>
-                                    <td>${s.port}</td>
-                                    <td>${s.serverPassword}</td>>
-                                    <td>${s.rconPassword}</td>
-                                    <td>${s.createdDate}</td>
-                                    <c:if test="${s.isActive == true}">
-                                        <td>
-                                            <span class="badge bg-success">Active</span>
-                                        </td>
-                                    </c:if>
-                                    <c:if test="${s.isActive == false}">
-                                        <td>
-                                            <span class="badge bg-info">In-use</span>
-                                        </td>
-                                    </c:if>
+                            <c:forEach items="${requestScope.matchhistory}" var="mh">
+                                <tr>
+                                    <td>${mh.matchid}</td>
                                     <td>
-                                        <a type="button" class="btn btn-dark btn-sm" href="${pageContext.request.contextPath}/server/edit?id=${s.id}">Edit</a>
-                                        <button type="button" class="btn btn-danger confirm-delete btn-sm" id="${s.id}" data-toggle="modal" data-target="#myModal">Delete</button>
+                                        <a role="button" class="link-primary" href="${pageContext.request.contextPath}/match/order/edit?id=${mh.orderid}">${mh.orderid}</a>
                                     </td>
+                                    <td>
+                                        <fmt:formatDate type = "both" dateStyle = "short" timeStyle = "short" value = "${mh.startTime}" />
+                                    </td>
+                                    <td>
+                                        <fmt:formatDate type = "both" dateStyle = "short" timeStyle = "short" value = "${mh.endTime}" />
+                                    </td>
+                                    <c:if test="${mh.state == 2}">
+                                        <td>
+                                            <span class="badge bg-success">Finished</span>
+                                        </td>
+                                    </c:if>
+                                    <c:if test="${mh.state == 1}">
+                                        <td>
+                                            <span class="badge bg-info">Playing</span>
+                                        </td>
+                                    </c:if>
+                                    <c:if test="${mh.state == 0}">
+                                        <td>
+                                            <span class="badge bg-secondary">Cancelled</span>
+                                        </td>
+                                    </c:if>
                                 </c:forEach>
                             </tr>
                         </tbody>
@@ -86,7 +83,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button id="btnDeleteServer" type="button" class="btn btn-danger">Confirm delete</button>
+                            <button id="btnDeleteMatchOrder" type="button" class="btn btn-danger">Confirm delete</button>
                         </div>
                     </div>
                 </div>

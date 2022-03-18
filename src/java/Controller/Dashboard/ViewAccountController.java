@@ -7,13 +7,10 @@ package Controller.Dashboard;
 
 import Controller.Login.BaseAuthController;
 import Model.Account;
-import Model.Server;
-import dal.ServerDBContext;
+import dal.AccountDBContext;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -21,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author hoan
  */
-public class ViewServerListController extends BaseAuthController {
+public class ViewAccountController extends BaseAuthController {
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -35,10 +32,11 @@ public class ViewServerListController extends BaseAuthController {
     @Override
     protected void processGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-            ServerDBContext serverDB = new ServerDBContext();
-            ArrayList<Server> servers = serverDB.getAllServers();
-            request.setAttribute("servers", servers);
-            request.getRequestDispatcher("../Dashboard/Server.jsp").forward(request, response);
+       AccountDBContext accountDB = new AccountDBContext();
+       
+       ArrayList<Account> accounts = accountDB.getAccount();
+       request.setAttribute("accounts", accounts);
+       request.getRequestDispatcher("../Dashboard/ViewAccount.jsp").forward(request, response);
     }
 
     /**
@@ -52,7 +50,7 @@ public class ViewServerListController extends BaseAuthController {
     @Override
     protected void processPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.sendRedirect("404.html");
+       
     }
 
     /**

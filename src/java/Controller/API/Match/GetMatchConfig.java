@@ -5,9 +5,11 @@
  */
 package Controller.API.Match;
 
+import Model.MatchOrder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import dal.MatchDBContext;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -19,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author hoan
  */
-public class RegisterMatch extends HttpServlet {
+public class GetMatchConfig extends HttpServlet {
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -35,11 +37,26 @@ public class RegisterMatch extends HttpServlet {
             throws ServletException, IOException {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         JsonObject json = new JsonObject();
-        json.addProperty("code", "500"); 
-        json.addProperty("Message", "GET method does not allowed on this API endpoint!");
-        
-        response.setStatus(500);
-        response.getWriter().println(gson.toJson(json).toString());
+        String ip = request.getParameter("ip");
+        String port = request.getParameter("port");
+
+        MatchDBContext matchDB = new MatchDBContext();
+        MatchOrder mo = matchDB.getMatchInfo(ip, port);
+        if (mo != null) {
+            json.addProperty("code", 200);
+            json.addProperty("OrderID", mo.getOrderID());
+            json.addProperty("ServerIP", mo.getServer().getIp());
+            json.addProperty("Port", mo.getServer().getPort());
+            json.addProperty("Type", mo.getType());
+
+            response.setStatus(200);
+            response.getWriter().println(gson.toJson(json).toString());
+        } else {
+            json.addProperty("code", 404);
+            json.addProperty("Message", "Cannot find any match order on this game server!");
+            response.setStatus(404);
+            response.getWriter().println(gson.toJson(json).toString());
+        }
     }
 
     /**
@@ -53,7 +70,12 @@ public class RegisterMatch extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        JsonObject json = new JsonObject();
+        json.addProperty("code", 500);
+        json.addProperty("Message", "POST method does not allowed on this API endpoint!");
+        response.setStatus(500);
+        response.getWriter().println(gson.toJson(json).toString());
     }
 
     /**
