@@ -35,6 +35,8 @@ public class EditMatchHistoryController extends BaseAuthController {
     @Override
     protected void processGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("utf-8");
         rawid = Integer.parseInt(request.getParameter("id"));
         MatchDBContext matchDB = new MatchDBContext();
 
@@ -55,18 +57,17 @@ public class EditMatchHistoryController extends BaseAuthController {
     @Override
     protected void processPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("utf-8");
         int matchid = Integer.parseInt(request.getParameter("matchID"));
         int state = Integer.parseInt(request.getParameter("matchState"));
         MatchDBContext matchDB = new MatchDBContext();
-        if(matchDB.updateMatchDetail(matchid, state))
-        {
+        if (matchDB.updateMatchDetail(matchid, state)) {
             matchDB.updateMatchDetail(matchid, state);
             request.setAttribute("isSuccess", true);
             request.setAttribute("msg", "Server edited successfully!");
             request.getRequestDispatcher("../../Dashboard/EditMatchOrder.jsp").forward(request, response);
-        }
-        else
-        {
+        } else {
             request.setAttribute("isSuccess", false);
             request.setAttribute("msg", "Edit server failed because an error occured!");
             request.getRequestDispatcher("../../Dashboard/EditMatchOrder.jsp").forward(request, response);

@@ -7,15 +7,12 @@ package Controller.Dashboard;
 
 import Controller.Login.BaseAuthController;
 import Model.Account;
-import Model.Match;
 import Model.Server;
 import dal.MatchDBContext;
 import dal.ServerDBContext;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -37,6 +34,8 @@ public class MatchRegisterController extends BaseAuthController {
     @Override
     protected void processGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("utf-8");
         ServerDBContext serverDB = new ServerDBContext();
 
         ArrayList<Server> activeServers = serverDB.getActiveServers();
@@ -55,6 +54,8 @@ public class MatchRegisterController extends BaseAuthController {
     @Override
     protected void processPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("utf-8");
         MatchDBContext matchDB = new MatchDBContext();
         int serverID = Integer.parseInt(request.getParameter("selectServer"));
         int type = Integer.parseInt(request.getParameter("selectMatchType"));
@@ -62,7 +63,7 @@ public class MatchRegisterController extends BaseAuthController {
         double price = Double.parseDouble(request.getParameter("price"));
         Account a = (Account) request.getSession().getAttribute("user");
         try {
-            matchDB.registerMatch(serverID, type, price, facebook, a.getId());
+            matchDB.registerMatch(serverID, type, price * 1000, facebook, a.getId());
             request.setAttribute("isSuccess", true);
             request.setAttribute("msg", "Match has been registered successfully!");
             request.getRequestDispatcher("../Dashboard/RegisterMatch.jsp").forward(request, response);

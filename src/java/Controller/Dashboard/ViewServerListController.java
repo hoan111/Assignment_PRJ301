@@ -35,10 +35,12 @@ public class ViewServerListController extends BaseAuthController {
     @Override
     protected void processGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-            ServerDBContext serverDB = new ServerDBContext();
-            ArrayList<Server> servers = serverDB.getAllServers();
-            request.setAttribute("servers", servers);
-            request.getRequestDispatcher("../Dashboard/Server.jsp").forward(request, response);
+        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("utf-8");
+        ServerDBContext serverDB = new ServerDBContext();
+        ArrayList<Server> servers = serverDB.getAllServers();
+        request.setAttribute("servers", servers);
+        request.getRequestDispatcher("../Dashboard/Server.jsp").forward(request, response);
     }
 
     /**

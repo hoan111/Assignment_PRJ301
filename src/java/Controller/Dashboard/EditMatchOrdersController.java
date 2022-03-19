@@ -38,6 +38,8 @@ public class EditMatchOrdersController extends BaseAuthController {
     @Override
     protected void processGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("utf-8");
         try {
             rawId = Integer.parseInt(request.getParameter("id"));
             MatchDBContext matchDB = new MatchDBContext();
@@ -63,6 +65,8 @@ public class EditMatchOrdersController extends BaseAuthController {
     @Override
     protected void processPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("utf-8");
         int id = Integer.parseInt(request.getParameter("orderID"));
         int type = Integer.parseInt(request.getParameter("selectMatchType"));
         double price = Double.parseDouble(request.getParameter("price"));
@@ -83,13 +87,13 @@ public class EditMatchOrdersController extends BaseAuthController {
         }
     }
 
-/**
- * Returns a short description of the servlet.
- *
- * @return a String containing servlet description
- */
-@Override
-        public String getServletInfo() {
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
+    @Override
+    public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
 

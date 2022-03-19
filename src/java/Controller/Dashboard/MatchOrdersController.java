@@ -34,9 +34,11 @@ public class MatchOrdersController extends BaseAuthController {
     @Override
     protected void processGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        MatchDBContext matchDB = new MatchDBContext(); 
+        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("utf-8");
+        MatchDBContext matchDB = new MatchDBContext();
         ArrayList<MatchOrder> mo = matchDB.GetAllOrders();
-        request.setAttribute("orders",mo);
+        request.setAttribute("orders", mo);
         request.getRequestDispatcher("../Dashboard/MatchOrders.jsp").forward(request, response);
     }
 
@@ -51,7 +53,7 @@ public class MatchOrdersController extends BaseAuthController {
     @Override
     protected void processPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
     }
 
     /**

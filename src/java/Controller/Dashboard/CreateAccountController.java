@@ -32,6 +32,8 @@ public class CreateAccountController extends BaseAuthController {
     @Override
     protected void processGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("utf-8");
         request.getRequestDispatcher("../Dashboard/CreateNewAccount.jsp").forward(request, response);
     }
 
@@ -46,6 +48,8 @@ public class CreateAccountController extends BaseAuthController {
     @Override
     protected void processPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("utf-8");
         String username = request.getParameter("Username");
         String password = request.getParameter("Password");
         int role = Integer.parseInt(request.getParameter("role"));

@@ -32,7 +32,9 @@ public class MainDashboardController extends BaseAuthController {
     @Override
     protected void processGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-            request.getRequestDispatcher("Dashboard/Dashboard.jsp").forward(request, response);
+        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("utf-8");
+        request.getRequestDispatcher("Dashboard/Dashboard.jsp").forward(request, response);
     }
 
     /**
@@ -46,6 +48,8 @@ public class MainDashboardController extends BaseAuthController {
     @Override
     protected void processPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("utf-8");
         response.sendRedirect("404.html");
     }
 

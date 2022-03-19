@@ -3,7 +3,6 @@
     Created on : Mar 3, 2022, 2:54:07 PM
     Author     : hoan
 --%>
-
 <%@tag description="Simple Wrapper Tag" pageEncoding="UTF-8"%>
 <%@attribute name="pageTitle" fragment="true" %>
 <%@attribute name="js" fragment="true" %>
@@ -11,11 +10,9 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="utf-8" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
         <title><jsp:invoke fragment="pageTitle"/> - RIP AIM CSGO Server Rent Management</title>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
         <link href="${pageContext.request.contextPath}/css/styles.css" rel="stylesheet" />

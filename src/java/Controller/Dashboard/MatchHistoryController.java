@@ -34,6 +34,8 @@ public class MatchHistoryController extends BaseAuthController {
     @Override
     protected void processGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("utf-8");
         MatchDBContext matchDB = new MatchDBContext();
         ArrayList<MatchHistory> mh = matchDB.getMatchHistory();
 

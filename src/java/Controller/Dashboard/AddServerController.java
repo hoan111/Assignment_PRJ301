@@ -32,6 +32,8 @@ public class AddServerController extends BaseAuthController {
     @Override
     protected void processGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("utf-8");
         ServerDBContext serverDB = new ServerDBContext();
         ArrayList<Server> servers = serverDB.getAllServers();
         request.setAttribute("servers", servers);
@@ -49,6 +51,8 @@ public class AddServerController extends BaseAuthController {
     @Override
     protected void processPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("utf-8");
         String serverName = (String) request.getParameter("serverName");
         String serverIP = (String) request.getParameter("serverIP");
         String serverPort = (String) request.getParameter("serverPort");

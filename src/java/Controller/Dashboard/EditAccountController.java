@@ -35,6 +35,8 @@ public class EditAccountController extends BaseAuthController {
     @Override
     protected void processGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("utf-8");
         AccountDBContext accountDB = new AccountDBContext();
         rawid = Integer.parseInt(request.getParameter("id"));
         Account a = accountDB.getAccountbyID(rawid);
@@ -58,6 +60,8 @@ public class EditAccountController extends BaseAuthController {
     @Override
     protected void processPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("utf-8");
         String username = request.getParameter("Username");
         String password = request.getParameter("PasswordEdit");
         int role = Integer.parseInt(request.getParameter("role"));

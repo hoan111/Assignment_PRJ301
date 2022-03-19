@@ -32,11 +32,13 @@ public class ViewAccountController extends BaseAuthController {
     @Override
     protected void processGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-       AccountDBContext accountDB = new AccountDBContext();
-       
-       ArrayList<Account> accounts = accountDB.getAccount();
-       request.setAttribute("accounts", accounts);
-       request.getRequestDispatcher("../Dashboard/ViewAccount.jsp").forward(request, response);
+        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("utf-8");
+        AccountDBContext accountDB = new AccountDBContext();
+
+        ArrayList<Account> accounts = accountDB.getAccount();
+        request.setAttribute("accounts", accounts);
+        request.getRequestDispatcher("../Dashboard/ViewAccount.jsp").forward(request, response);
     }
 
     /**
@@ -50,7 +52,7 @@ public class ViewAccountController extends BaseAuthController {
     @Override
     protected void processPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-       
+
     }
 
     /**
