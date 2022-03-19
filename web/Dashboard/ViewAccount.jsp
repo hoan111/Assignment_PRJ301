@@ -47,7 +47,15 @@
                                 <tr id="rowid${a.id}">
                                     <td>${a.id}</td>
                                     <td>${a.username}</td>
-                                    <td>${a.apikey}</td>
+                                    <td>
+                                        <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAPIKey${a.id}" aria-expanded="false" aria-controls="collapseExample">
+                                            Click to view
+                                        </button>
+                                        <div class="collapse" id="collapseAPIKey${a.id}">
+                                            <div class="card card-body" style="margin-top:10px;">
+                                                ${a.apikey}
+                                            </div>
+                                    </td>
                                     <c:if test="${a.role == 2}">
                                         <td>
                                             Moderator

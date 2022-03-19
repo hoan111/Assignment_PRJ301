@@ -50,8 +50,26 @@
                                     <td>${s.serverName}</td>
                                     <td>${s.ip}</td>
                                     <td>${s.port}</td>
-                                    <td>${s.serverPassword}</td>>
-                                    <td>${s.rconPassword}</td>
+                                    <td>
+                                        <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapseServerPass${s.id}" aria-expanded="false" aria-controls="collapseExample">
+                                            Click to view
+                                        </button>
+                                        <div class="collapse" id="collapseServerPass${s.id}">
+                                            <div class="card card-body" style="margin-top:10px;">
+                                                ${s.serverPassword}
+                                            </div>
+                                    </td>>
+                                    <td>
+                                        <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapseServerRcon${s.id}" aria-expanded="false" aria-controls="collapseExample">
+                                            Click to view
+                                        </button>
+                                        <div class="collapse" id="collapseServerRcon${s.id}">
+                                            <div class="card card-body" style="margin-top:10px;">
+                                                ${s.rconPassword}
+                                            </div>
+                    
+
+                                    </td>
                                     <td>${s.createdDate}</td>
                                     <c:if test="${s.isActive == true}">
                                         <td>
