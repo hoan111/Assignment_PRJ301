@@ -265,15 +265,14 @@ public class MatchDBContext extends DBContext {
             PreparedStatement stm = connection.prepareStatement(sql);
             ResultSet rs = stm.executeQuery();
             ArrayList<MatchHistory> matchHistory = new ArrayList<>();
-            while(rs.next())
-            {
+            while (rs.next()) {
                 MatchHistory mh = new MatchHistory();
                 mh.setMatchid(rs.getInt("match_id"));
                 mh.setStartTime(rs.getTimestamp("start_time"));
                 mh.setEndTime(rs.getTimestamp("end_time"));
                 mh.setOrderid(rs.getInt("order_id"));
                 mh.setState(rs.getInt("state"));
-                
+
                 matchHistory.add(mh);
             }
             return matchHistory;
@@ -281,5 +280,42 @@ public class MatchDBContext extends DBContext {
             Logger.getLogger(MatchDBContext.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
+    }
+
+    public MatchHistory getMatchHistoryByID(int matchID) {
+        try {
+            String sql = "SELECT [match_id]\n"
+                    + "      ,[state]\n"
+                    + "  FROM [dbo].[MatchHistory]\n"
+                    + "  WHERE match_id = ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, matchID);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                MatchHistory mh = new MatchHistory();
+                mh.setMatchid(rs.getInt("match_id"));
+                mh.setState(rs.getInt("state"));
+                return mh;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(MatchDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    public boolean updateMatchDetail(int matchID, int state) {
+        try {
+            String sql = "UPDATE [dbo].[MatchHistory]\n"
+                    + "   SET [state] = ?\n"
+                    + " WHERE match_id = ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1,state);
+            stm.setInt(2, matchID);
+            stm.executeUpdate();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(MatchDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
 }

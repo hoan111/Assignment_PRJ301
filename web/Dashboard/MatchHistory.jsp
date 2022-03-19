@@ -25,6 +25,7 @@
                                 <th>Start time</th>
                                 <th>End time</th>
                                 <th>State</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tfoot>
@@ -34,6 +35,7 @@
                                 <th>Start time</th>
                                 <th>End time</th>
                                 <th>State</th>
+                                <th>Action</th>
                             </tr>
                         </tfoot>
                         <tbody>
@@ -64,6 +66,10 @@
                                             <span class="badge bg-secondary">Cancelled</span>
                                         </td>
                                     </c:if>
+                                    <td>
+                                        <a type="button" class="btn btn-dark btn-sm" href="${pageContext.request.contextPath}/match/history/edit?id=${mh.matchid}">Edit</a>
+                                        <button type="button" class="btn btn-danger confirm-delete btn-sm" id="${mh.matchid}" data-toggle="modal" data-target="#myModal">Delete</button>
+                                    </td>
                                 </c:forEach>
                             </tr>
                         </tbody>
@@ -75,7 +81,7 @@
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Delete Server</h5>
+                            <h5 class="modal-title" id="exampleModalLabel">Delete Match</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -83,7 +89,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button id="btnDeleteMatchOrder" type="button" class="btn btn-danger">Confirm delete</button>
+                            <button id="btnDeleteMatchHistory" type="button" class="btn btn-danger">Confirm delete</button>
                         </div>
                     </div>
                 </div>

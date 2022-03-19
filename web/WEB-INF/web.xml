@@ -88,6 +88,10 @@
         <servlet-name>DeleteAdminController</servlet-name>
         <servlet-class>Controller.Dashboard.DeleteAdminController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>EditMatchHistoryController</servlet-name>
+        <servlet-class>Controller.Dashboard.EditMatchHistoryController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>MatchAPIController</servlet-name>
         <url-pattern>/api/match</url-pattern>
@@ -175,6 +179,10 @@
     <servlet-mapping>
         <servlet-name>DeleteAdminController</servlet-name>
         <url-pattern>/account/delete</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EditMatchHistoryController</servlet-name>
+        <url-pattern>/match/history/edit</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
