@@ -86,6 +86,24 @@ $(document).ready(function () {
         $('#myModal').modal('hide');
     });
 
+    $('#btnDeleteMatchHistory').click(function () {
+        var id = $('#myModal').data('id');
+        var servletContext = document.getElementById("servletContext").value;
+        var url = servletContext + '/match/history/delete';
+        $.post(url, {id: id}, function () {
+            $('#error-alert').addClass('d-none');
+            $('#success-alert').removeClass('d-none');
+            $('#rowid' + id).remove();
+            $('#alertSuccessInfo').html("Delete match successfully");
+        })
+                .fail(function () {
+                    $('#success-alert').addClass('d-none');
+                    $('#error-alert').removeClass('d-none');
+                    $('#alertErrorInfo').html("Delete match failed");
+                });
+        $('#myModal').modal('hide');
+    });
+
     $('#genAPIkeybtn').on('click', function () {
         $('#apikeyInput').val(generateAPIKey());
     });

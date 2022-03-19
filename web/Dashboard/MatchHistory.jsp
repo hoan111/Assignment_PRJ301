@@ -40,7 +40,7 @@
                         </tfoot>
                         <tbody>
                             <c:forEach items="${requestScope.matchhistory}" var="mh">
-                                <tr>
+                                <tr id="rowid${mh.matchid}">
                                     <td>${mh.matchid}</td>
                                     <td>
                                         <a role="button" class="link-primary" href="${pageContext.request.contextPath}/match/order/edit?id=${mh.orderid}">${mh.orderid}</a>

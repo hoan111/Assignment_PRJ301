@@ -92,6 +92,10 @@
         <servlet-name>EditMatchHistoryController</servlet-name>
         <servlet-class>Controller.Dashboard.EditMatchHistoryController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>DeleteMatchHistoryController</servlet-name>
+        <servlet-class>Controller.Dashboard.DeleteMatchHistoryController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>MatchAPIController</servlet-name>
         <url-pattern>/api/match</url-pattern>
@@ -183,6 +187,10 @@
     <servlet-mapping>
         <servlet-name>EditMatchHistoryController</servlet-name>
         <url-pattern>/match/history/edit</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteMatchHistoryController</servlet-name>
+        <url-pattern>/match/history/delete</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

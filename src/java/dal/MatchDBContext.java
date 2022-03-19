@@ -318,4 +318,18 @@ public class MatchDBContext extends DBContext {
         }
         return false;
     }
+    
+        public boolean deleteMatchDetail(int matchID) {
+        try {
+            String sql = "DELETE FROM [dbo].[MatchHistory]\n"
+                    + " WHERE match_id = ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1,matchID);
+            stm.executeUpdate();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(MatchDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
 }
