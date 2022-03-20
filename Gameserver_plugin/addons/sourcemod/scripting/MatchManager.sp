@@ -5,11 +5,16 @@
 #define PLUGIN_AUTHOR "ripaimcsgo.xyz"
 #define PLUGIN_VERSION "1.0"
 
+#define CANCELLED 0
+#define PLAYING 1
+#define FINISHED 2
+
 #include <sourcemod>
 #include <sdktools>
 #include <cstrike>
 #include <warmod>
 #include <ripext>
+
 //#include <sdkhooks>
 
 #pragma newdecls required
@@ -26,14 +31,15 @@ ConVar port;
 /* Variables */
 char g_APIKey[128];
 char g_APIURL[1024];
-int g_iEnable;
 char g_sIP[20];
 char g_sPort[6];
 
-bool g_bcanJoin = false;
+bool g_bEnable = true;
+bool g_bIsLive = false;
 
 static int g_iOrderID = 0;
 static int g_iMatchID = 0;
+
 public Plugin myinfo = 
 {
 	name = "Match management for Warmod[BFG]", 
@@ -58,18 +64,44 @@ public void OnPluginStart()
 	ip = FindConVar("ip");
 	port = FindConVar("hostport");
 	
-	RegConsoleCmd("sm_check", printInfo, "test");
 }
 
 public void OnConfigsExecuted()
 {
 	wm_config_api_url.GetString(g_APIURL, sizeof(g_APIURL));
 	wm_config_api_key.GetString(g_APIKey, sizeof(g_APIKey));
+	g_bEnable = wm_enable_api.BoolValue;
 	GetConVarString(ip, g_sIP, sizeof(g_sIP));
 	GetConVarString(port, g_sPort, sizeof(g_sPort));
 }
 
-/* Functions */
+/*public void OnClientConnected(int client)
+{
+	GetMatchInfo();
+	if(!g_bcanJoin)
+	{
+		KickClient(client, "There is no match has been registered on this server");
+	}
+}*/
+
+public void OnClientPostAdminCheck(int client)
+{
+	if (g_bEnable)
+	{
+		if (!IsClientAuthorized(client))
+		{
+			KickClient(client, "Verification problem, Please reconnect");
+		}
+		if(g_iOrderID == 0 && g_iMatchID == 0)
+		{
+			GetMatchInfo();
+			KickClient(client, "There is no match has been registered on this server");
+		}
+	}
+}
+
+
+/* Functions (Some code from G5WS plugin by Phlex Plexico. Thanks!) */
 static HTTPRequest CreateRequest(const char[] apiMethod, any:...) {
 	char url[1024];
 	Format(url, sizeof(url), "%s%s", g_APIURL, apiMethod);
@@ -89,51 +121,97 @@ static HTTPRequest CreateRequest(const char[] apiMethod, any:...) {
 	}
 }
 
-public static void GetMatchCallback(HTTPResponse response, any value) {
-    char sData[1024];
-    if (response.Status == HTTPStatus_NotFound) {
-        PrintToServer("[ERR] API request failed, HTTP status code: %d", response.Status);
-        response.Data.ToString(sData, sizeof(sData), JSON_INDENT(4));
-        
-        PrintToServer("[ERR] Response:\n%s", sData);
-        g_bcanJoin = false;
-    }
-    else
-    {
-    	g_bcanJoin = true;
-    	char jsonres[512];
-    	response.Data.ToString(jsonres, sizeof(jsonres));
-    	JSONObject obj = JSONObject.FromString(jsonres);
-    	g_iOrderID = obj.GetInt("OrderID");
-    	delete obj;
-   	}
+public void OnClientDisconnect_Post(int client)
+{
+	PrintToServer("Excuting OnClientDisconnect");
+	if (!RealPlayerExist() && g_bIsLive)
+	{
+		UpdateMatchState(CANCELLED);
+		UpdateMatchOrderStatus(CANCELLED, "Players disconnected when playing.");
+		
+		g_iOrderID = 0;
+		g_iMatchID = 0;
+		g_bIsLive = false;
+	}
 }
 
-public static void InsertCallback(HTTPResponse response, any value) {
-    char sData[1024];
-    if (response.Status == HTTPStatus_InternalServerError) {
-        PrintToServer("[ERR] API request failed, HTTP status code: %d", response.Status);
-        response.Data.ToString(sData, sizeof(sData), JSON_INDENT(4));
-        
-        PrintToServer("[ERR] Response:\n%s", sData);
-    }
-    else
-    {
-    	char jsonres[512];
-    	response.Data.ToString(jsonres, sizeof(jsonres));
-    	JSONObject obj = JSONObject.FromString(jsonres);
-    	g_iMatchID = obj.GetInt("MatchID");
-    	delete obj;
-   	}
+/* Request callback */
+public void GetMatchCallback(HTTPResponse response, any value) {
+	char sData[1024];
+	if (response.Status == HTTPStatus_NotFound) {
+		PrintToServer("[ERR] API request failed, HTTP status code: %d", response.Status);
+		response.Data.ToString(sData, sizeof(sData), JSON_INDENT(4));
+		
+		PrintToServer("[ERR] Response:\n%s", sData);
+		//KickClient(value, "There is no match has been registered on this server");
+	}
+	else
+	{
+		//g_bcanJoin = true;
+		char jsonres[512];
+		response.Data.ToString(jsonres, sizeof(jsonres));
+		JSONObject obj = JSONObject.FromString(jsonres);
+		g_iOrderID = obj.GetInt("OrderID");
+		delete obj;
+	}
 }
 
+public void InsertCallback(HTTPResponse response, any value) {
+	char sData[1024];
+	if (response.Status == HTTPStatus_InternalServerError) {
+		PrintToServer("[ERR] API request failed, HTTP status code: %d", response.Status);
+		response.Data.ToString(sData, sizeof(sData), JSON_INDENT(4));
+		
+		PrintToServer("[ERR] Response:\n%s", sData);
+	}
+	else
+	{
+		char jsonres[512];
+		response.Data.ToString(jsonres, sizeof(jsonres));
+		JSONObject obj = JSONObject.FromString(jsonres);
+		g_iMatchID = obj.GetInt("MatchID");
+		delete obj;
+	}
+}
+
+public void UpdateMatchStateCallback(HTTPResponse response, any value) {
+	char sData[1024];
+	if (response.Status == HTTPStatus_InternalServerError) {
+		PrintToServer("[ERR] API request failed, HTTP status code: %d", response.Status);
+		response.Data.ToString(sData, sizeof(sData), JSON_INDENT(4));
+		
+		PrintToServer("[ERR] Response:\n%s", sData);
+	}
+	else
+	{
+		char jsonres[512];
+		response.Data.ToString(jsonres, sizeof(jsonres));
+	}
+}
+
+public void UpdateMatchOrderStatusCallback(HTTPResponse response, any value) {
+	char sData[1024];
+	if (response.Status == HTTPStatus_InternalServerError) {
+		PrintToServer("[ERR] API request failed, HTTP status code: %d", response.Status);
+		response.Data.ToString(sData, sizeof(sData), JSON_INDENT(4));
+		
+		PrintToServer("[ERR] Response:\n%s", sData);
+	}
+	else
+	{
+		char jsonres[512];
+		response.Data.ToString(jsonres, sizeof(jsonres));
+	}
+}
+
+/* Make request to API Server */
 static HTTPRequest GetMatchInfo()
 {
 	HTTPRequest req = CreateRequest("/match/check-match-info");
 	req.AppendQueryParam("Key", "%s", g_APIKey);
 	req.AppendQueryParam("ip", "%s", g_sIP);
 	req.AppendQueryParam("port", "%s", g_sPort);
-	if(req != null)
+	if (req != null)
 	{
 		req.Get(GetMatchCallback);
 	}
@@ -144,32 +222,71 @@ static HTTPRequest InsertNewMatch()
 	HTTPRequest req = CreateRequest("/match/insert");
 	req.AppendQueryParam("Key", "%s", g_APIKey);
 	req.AppendQueryParam("orderID", "%d", g_iOrderID);
-	if(req != null)
+	if (req != null)
 	{
 		req.Post(new JSONObject(), InsertCallback);
 	}
 }
 
-public void OnClientConnected(int client)
+static HTTPRequest UpdateMatchState(int state)
 {
-	GetMatchInfo();
-	if(!g_bcanJoin)
+	HTTPRequest req = CreateRequest("/match/update");
+	req.AppendQueryParam("Key", "%s", g_APIKey);
+	req.AppendQueryParam("matchID", "%d", g_iMatchID);
+	req.AppendQueryParam("state", "%d", state);
+	if (req != null)
 	{
-		KickClient(client, "There is no match has been registered on this server");
+		req.Post(new JSONObject(), UpdateMatchStateCallback);
 	}
 }
 
-public void OnLiveOn3() {
-	InsertNewMatch();
+static HTTPRequest UpdateMatchOrderStatus(int status, char[] comment)
+{
+	HTTPRequest req = CreateRequest("/match/order/update");
+	req.AppendQueryParam("Key", "%s", g_APIKey);
+	req.AppendQueryParam("orderID", "%d", g_iOrderID);
+	req.AppendQueryParam("status", "%d", status);
+	req.AppendQueryParam("comment", "%s", comment);
+	if (req != null)
+	{
+		req.Post(new JSONObject(), UpdateMatchOrderStatusCallback);
+	}
 }
 
+/* Event handler */
+public void OnLiveOn3() {
+	if (g_bEnable)
+	{
+		InsertNewMatch();
+		g_bIsLive = true;
+	}
+}
 
-public Action printInfo(int client, int args) {
-	PrintToServer("g_APIURL: %s", g_APIURL);
-	PrintToServer("g_APIKey: %s", g_APIKey);
-	PrintToServer("g_sIP: %s", g_sIP);
-	PrintToServer("g_sPort: %s", g_sPort);
-	PrintToServer("g_iOrderID: %d", g_iOrderID);
-	PrintToServer("g_iMatchID: %d", g_iMatchID);
+public void OnEndMatch(const char[] ct_name, int ct_score, int t_score, const char[] t_name)
+{
+	if (g_bEnable)
+	{
+		UpdateMatchState(FINISHED);
+		g_iOrderID = 0;
+		g_iMatchID = 0;
+		g_bIsLive = false;
+	}
+}
+
+/* Check if any player exist on the server. */
+/* Code by Alex Dragokas - https://github.com/dragokas/ */
+bool RealPlayerExist(int iExclude = 0)
+{
+	for (int client = 1; client <= MaxClients; client++)
+	{
+		if (client != iExclude && IsClientConnected(client))
+		{
+			if (!IsFakeClient(client))
+			{
+				return true;
+			}
+		}
+	}
+	return false;
 }
 
