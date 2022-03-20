@@ -3,13 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Controller.Dashboard;
+package Controller.API.Match;
 
-import Controller.Login.BaseAuthController;
-import Model.Account;
-import dal.AccountDBContext;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import dal.MatchDBContext;
-import dal.ServerDBContext;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -21,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author hoan
  */
-public class MainDashboardController extends BaseAuthController {
+public class UpdateMatchOrder extends HttpServlet {
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -33,26 +32,9 @@ public class MainDashboardController extends BaseAuthController {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void processGet(HttpServletRequest request, HttpServletResponse response)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        request.setCharacterEncoding("utf-8");
-        
-        AccountDBContext accountDB = new AccountDBContext();
-        MatchDBContext matchDB = new MatchDBContext();
-        ServerDBContext serverDB = new ServerDBContext();
-        
-        int total_server = serverDB.countServers();
-        int total_match_orders = matchDB.getTotalMatchOrder();
-        int playing_match = matchDB.getCurrentPlayingMatch();
-        int total_admin = accountDB.getAdmins();
-        
-        request.setAttribute("TotalServer", total_server);
-        request.setAttribute("TotalOrder", total_match_orders);
-        request.setAttribute("PlayingMatch", playing_match);
-        request.setAttribute("TotalAdmin", total_admin);
-        
-        request.getRequestDispatcher("Dashboard/Dashboard.jsp").forward(request, response);
+
     }
 
     /**
@@ -64,11 +46,25 @@ public class MainDashboardController extends BaseAuthController {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void processPost(HttpServletRequest request, HttpServletResponse response)
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        request.setCharacterEncoding("utf-8");
-        response.sendRedirect("404.html");
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        JsonObject json = new JsonObject();
+        int orderID = Integer.parseInt(request.getParameter("orderID"));
+        int status = Integer.parseInt(request.getParameter("status"));
+        String comment = request.getParameter("comment");
+        MatchDBContext matchDB = new MatchDBContext();
+        if (matchDB.updateMatchOrder(orderID, status, comment)) {
+            json.addProperty("Code", 200);
+            json.addProperty("Message", "Match order updated successfully!");
+            response.setStatus(200);
+            response.getWriter().println(gson.toJson(json).toString());
+        } else {
+            json.addProperty("Code", 500);
+            json.addProperty("Message", "An error occurred when updating match order!");
+            response.setStatus(500);
+            response.getWriter().println(gson.toJson(json).toString());
+        }
     }
 
     /**

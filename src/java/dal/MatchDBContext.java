@@ -309,7 +309,7 @@ public class MatchDBContext extends DBContext {
                     + "   SET [state] = ?\n"
                     + " WHERE match_id = ?";
             PreparedStatement stm = connection.prepareStatement(sql);
-            stm.setInt(1,state);
+            stm.setInt(1, state);
             stm.setInt(2, matchID);
             stm.executeUpdate();
             return true;
@@ -318,18 +318,70 @@ public class MatchDBContext extends DBContext {
         }
         return false;
     }
-    
-        public boolean deleteMatchDetail(int matchID) {
+
+    public boolean deleteMatchDetail(int matchID) {
         try {
             String sql = "DELETE FROM [dbo].[MatchHistory]\n"
                     + " WHERE match_id = ?";
             PreparedStatement stm = connection.prepareStatement(sql);
-            stm.setInt(1,matchID);
+            stm.setInt(1, matchID);
             stm.executeUpdate();
             return true;
         } catch (SQLException ex) {
             Logger.getLogger(MatchDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
+    }
+
+    public boolean updateMatchOrder(int order_id, int status, String comment) {
+        try {
+            String sql = "UPDATE [dbo].[MatchOrders]\n"
+                    + "   SET\n"
+                    + "   [status] = ?,\n"
+                    + "   [comment] = ?\n"
+                    + " WHERE [order_id] = ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, status);
+            stm.setString(2, comment);
+            stm.setInt(3, order_id);
+            stm.executeUpdate();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(MatchDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    public int getTotalMatchOrder() {
+        try {
+            String sql = "SELECT COUNT(*) as TotalMatchOrders\n"
+                    + "  FROM [dbo].[MatchOrders]";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                int totalServer = rs.getInt("TotalMatchOrders");
+                return totalServer;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(MatchDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
+    }
+
+    public int getCurrentPlayingMatch() {
+        try {
+            String sql = "SELECT COUNT(*) as PlayingMatch\n"
+                    + "  FROM [dbo].[MatchHistory]\n"
+                    + "  WHERE state = 1";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                int totalPlayingMatch = rs.getInt("PlayingMatch");
+                return totalPlayingMatch;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(MatchDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
     }
 }

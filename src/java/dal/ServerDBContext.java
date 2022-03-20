@@ -187,4 +187,21 @@ public class ServerDBContext extends DBContext {
             }
         }
     }
+
+    public int countServers() {
+        try {
+            String sql = "SELECT COUNT(*) as TotalServers\n"
+                    + "  FROM [dbo].[Servers]";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            ResultSet rs = stm.executeQuery();
+            if(rs.next())
+            {
+                int count = rs.getInt("TotalServers");
+                return count;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ServerDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
+    }
 }

@@ -192,4 +192,20 @@ public class AccountDBContext extends DBContext {
         }
         return false;
     }
+
+    public int getAdmins() {
+        try {
+            String sql = "SELECT COUNT(*) as Admins\n"
+                    + "  FROM [dbo].[Admins]";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                int totalAdmin = rs.getInt("Admins");
+                return totalAdmin;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(MatchDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
+    }
 }

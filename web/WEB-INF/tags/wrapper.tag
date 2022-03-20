@@ -16,6 +16,8 @@
         <title><jsp:invoke fragment="pageTitle"/> - RIP AIM CSGO Server Rent Management</title>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
         <link href="${pageContext.request.contextPath}/css/styles.css" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
         <!-- jquery & jquery validation -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -37,8 +39,7 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="#!">Settings</a></li>
-                        <li><a class="dropdown-item" href="#!">Activity Log</a></li>
+                        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/account/edit?id=${sessionScope.user.id}">Edit your account</a></li>
                         <li><hr class="dropdown-divider" /></li>
                         <li><a class="dropdown-item" href="${pageContext.request.contextPath}/logout">Logout</a></li>
                     </ul>
@@ -56,34 +57,34 @@
                             </a>
                             <div class="sb-sidenav-menu-heading">Server Management</div>
                             <a class="nav-link" href="${pageContext.request.contextPath}/server/add">
-                                <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                                <div class="sb-nav-link-icon"><i class="fa fa-server" aria-hidden="true"></i></div>
                                 Add a new server
                             </a>
                             <a class="nav-link" href="${pageContext.request.contextPath}/server/list">
-                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                                <div class="sb-nav-link-icon"><i class="fa fa-list" aria-hidden="true"></i></div>
                                 View servers list
                             </a>
                             <div class="sb-sidenav-menu-heading">Match Management</div>
                             <a class="nav-link" href="${pageContext.request.contextPath}/match/register">
-                                <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                                <div class="sb-nav-link-icon"><i class="fa fa-plus-square" aria-hidden="true"></i></div>
                                 Register a match
                             </a>
                             <a class="nav-link" href="${pageContext.request.contextPath}/match/orders">
-                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                                <div class="sb-nav-link-icon"><i class="fa fa-list" aria-hidden="true"></i></div>
                                 View match orders
                             </a>
                             <a class="nav-link" href="${pageContext.request.contextPath}/match/history">
-                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                                <div class="sb-nav-link-icon"><i class="fa fa-list" aria-hidden="true"></i></div>
                                 View match history
                             </a>
                             <c:if test="${sessionScope.user.role == 1}">
                                 <div class="sb-sidenav-menu-heading">Account management</div>
                                 <a class="nav-link" href="${pageContext.request.contextPath}/account/create">
-                                    <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                                    <div class="sb-nav-link-icon"><i class="fa fa-user-plus" aria-hidden="true"></i></div>
                                     Create an account
                                 </a>
                                 <a class="nav-link" href="${pageContext.request.contextPath}/account/view">
-                                    <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                                    <div class="sb-nav-link-icon"><i class="fa fa-list" aria-hidden="true"></i></div>
                                     View account list
                                 </a>
                             </c:if>
