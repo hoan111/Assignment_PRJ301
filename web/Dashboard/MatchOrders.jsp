@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <t:wrapper>
     <jsp:attribute name="pageTitle">Match Orders</jsp:attribute>
     <jsp:body>
@@ -102,7 +103,9 @@
                                             <span class="badge bg-secondary">Not finished</span>
                                         </td>
                                     </c:if>
-                                    <td>${o.createdTime}</td>
+                                    <td>
+                                        <fmt:formatDate type = "both" dateStyle = "short" timeStyle = "short" value = "${o.createdTime}" />
+                                    </td>
                                     <td>${o.registerAdminName}</td>
                                     <td>${o.comment}</td>
                                     <td>

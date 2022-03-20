@@ -6,6 +6,7 @@
 package Model;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 /**
  *
@@ -18,7 +19,7 @@ public class MatchOrder {
     private double price;
     private String facebook;
     private int Status;
-    private Date createdTime;
+    private Timestamp createdTime;
     private String registerAdminName;
     private String comment;
 
@@ -78,11 +79,11 @@ public class MatchOrder {
         this.Status = Status;
     }
 
-    public Date getCreatedTime() {
+    public Timestamp getCreatedTime() {
         return createdTime;
     }
 
-    public void setCreatedTime(Date createdTime) {
+    public void setCreatedTime(Timestamp createdTime) {
         this.createdTime = createdTime;
     }
 

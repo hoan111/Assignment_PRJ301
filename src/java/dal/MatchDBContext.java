@@ -89,7 +89,7 @@ public class MatchDBContext extends DBContext {
                 mo.setPrice(rs.getDouble("price"));
                 mo.setFacebook(rs.getString("facebook"));
                 mo.setStatus(rs.getInt("status"));
-                mo.setCreatedTime(rs.getDate("created_time"));
+                mo.setCreatedTime(rs.getTimestamp("created_time"));
                 mo.setRegisterAdminName(rs.getString("RegisterBy"));
                 mo.setComment(rs.getString("comment"));
 

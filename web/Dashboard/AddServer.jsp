@@ -44,7 +44,7 @@
                             <div class="errordiv"></div>
                         </div>
                     </div>
-                    <input class="btn btn-primary" type="submit" value="Submit" style="margin-top: 20px;">
+                    <input class="btn btn-primary" type="submit" value="Add" style="margin-top: 20px;">
                         </form>
                         <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
                             <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
