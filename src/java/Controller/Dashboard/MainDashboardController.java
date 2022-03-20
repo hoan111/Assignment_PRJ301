@@ -7,11 +7,14 @@ package Controller.Dashboard;
 
 import Controller.Login.BaseAuthController;
 import Model.Account;
+import Model.MatchHistory;
+import Model.Server;
 import dal.AccountDBContext;
 import dal.MatchDBContext;
 import dal.ServerDBContext;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -46,11 +49,15 @@ public class MainDashboardController extends BaseAuthController {
         int total_match_orders = matchDB.getTotalMatchOrder();
         int playing_match = matchDB.getCurrentPlayingMatch();
         int total_admin = accountDB.getAdmins();
+        ArrayList<Server> servers = serverDB.getAllServers();
+        ArrayList<MatchHistory> mh = matchDB.getMatchHistory();
         
         request.setAttribute("TotalServer", total_server);
         request.setAttribute("TotalOrder", total_match_orders);
         request.setAttribute("PlayingMatch", playing_match);
         request.setAttribute("TotalAdmin", total_admin);
+        request.setAttribute("servers", servers);
+        request.setAttribute("matchHistory", mh);
         
         request.getRequestDispatcher("Dashboard/Dashboard.jsp").forward(request, response);
     }
