@@ -25,6 +25,7 @@
                                 <th>Start time</th>
                                 <th>End time</th>
                                 <th>State</th>
+                                <th>Score</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -35,6 +36,7 @@
                                 <th>Start time</th>
                                 <th>End time</th>
                                 <th>State</th>
+                                <th>Score</th>
                                 <th>Action</th>
                             </tr>
                         </tfoot>
@@ -66,6 +68,17 @@
                                             <span class="badge bg-secondary">Cancelled</span>
                                         </td>
                                     </c:if>
+                                    <td>
+                                        <c:if test="${mh.state == 1 && mh.matchScore == null}">
+                                            No data yet
+                                        </c:if>
+                                        <c:if test="${mh.state == 1 && mh.matchScore != null}">
+                                            (${mh.matchScore.ctName}) ${mh.matchScore.ctScore} - ${mh.matchScore.tScore} (${mh.matchScore.tName}) [LIVE]
+                                        </c:if>
+                                        <c:if test="${mh.state == 2}">
+                                            (${mh.matchScore.ctName}) ${mh.matchScore.ctScore} - ${mh.matchScore.tScore} (${mh.matchScore.tName})
+                                        </c:if>
+                                    </td>
                                     <td>
                                         <a type="button" class="btn btn-dark btn-sm" href="${pageContext.request.contextPath}/match/history/edit?id=${mh.matchid}">Edit</a>
                                         <button type="button" class="btn btn-danger confirm-delete btn-sm" id="${mh.matchid}" data-toggle="modal" data-target="#myModal">Delete</button>

@@ -75,15 +75,6 @@ public void OnConfigsExecuted()
 	GetConVarString(port, g_sPort, sizeof(g_sPort));
 }
 
-/*public void OnClientConnected(int client)
-{
-	GetMatchInfo();
-	if(!g_bcanJoin)
-	{
-		KickClient(client, "There is no match has been registered on this server");
-	}
-}*/
-
 public void OnClientPostAdminCheck(int client)
 {
 	if (g_bEnable)
@@ -123,7 +114,6 @@ static HTTPRequest CreateRequest(const char[] apiMethod, any:...) {
 
 public void OnClientDisconnect_Post(int client)
 {
-	PrintToServer("Excuting OnClientDisconnect");
 	if (!RealPlayerExist() && g_bIsLive)
 	{
 		UpdateMatchState(CANCELLED);
@@ -204,6 +194,21 @@ public void UpdateMatchOrderStatusCallback(HTTPResponse response, any value) {
 	}
 }
 
+public void UpdateMatchScoreCallback(HTTPResponse response, any value) {
+	char sData[1024];
+	if (response.Status == HTTPStatus_InternalServerError) {
+		PrintToServer("[ERR] API request failed, HTTP status code: %d", response.Status);
+		response.Data.ToString(sData, sizeof(sData), JSON_INDENT(4));
+		
+		PrintToServer("[ERR] Response:\n%s", sData);
+	}
+	else
+	{
+		char jsonres[512];
+		response.Data.ToString(jsonres, sizeof(jsonres));
+	}
+}
+
 /* Make request to API Server */
 static HTTPRequest GetMatchInfo()
 {
@@ -253,6 +258,21 @@ static HTTPRequest UpdateMatchOrderStatus(int status, char[] comment)
 	}
 }
 
+static HTTPRequest UpdateMatchScore(int ct_score, int t_score, const char[] ct_name, const char[] t_name)
+{
+	HTTPRequest req = CreateRequest("/match/score/update");
+	req.AppendQueryParam("Key", "%s", g_APIKey);
+	req.AppendQueryParam("matchID", "%d", g_iMatchID);
+	req.AppendQueryParam("ct_score", "%d", ct_score);
+	req.AppendQueryParam("t_score", "%d", t_score);
+	req.AppendQueryParam("ct_name", "%s", ct_name);
+	req.AppendQueryParam("t_name", "%s", t_name);
+	if (req != null)
+	{
+		req.Post(new JSONObject(), UpdateMatchScoreCallback);
+	}
+}
+
 /* Event handler */
 public void OnLiveOn3() {
 	if (g_bEnable)
@@ -262,11 +282,20 @@ public void OnLiveOn3() {
 	}
 }
 
+public void OnRoundEnd(const char[] ct_name, int ct_score, int t_score, const char[] t_name)
+{
+	if(g_bIsLive)
+	{
+		UpdateMatchScore(ct_score, t_score, ct_name, t_name);
+	}
+}
+
 public void OnEndMatch(const char[] ct_name, int ct_score, int t_score, const char[] t_name)
 {
 	if (g_bEnable)
 	{
 		UpdateMatchState(FINISHED);
+		UpdateMatchScore(ct_score, t_score, ct_name, t_name);
 		g_iOrderID = 0;
 		g_iMatchID = 0;
 		g_bIsLive = false;

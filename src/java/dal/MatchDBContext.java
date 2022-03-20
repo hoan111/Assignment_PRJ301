@@ -7,6 +7,7 @@ package dal;
 
 import Model.MatchHistory;
 import Model.MatchOrder;
+import Model.MatchScore;
 import Model.Server;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -261,18 +262,30 @@ public class MatchDBContext extends DBContext {
                     + "      ,[end_time]\n"
                     + "      ,[order_id]\n"
                     + "      ,[state]\n"
+                    + "      ,[ct_name]\n"
+                    + "      ,[t_name]\n"
+                    + "      ,[ct_score]\n"
+                    + "      ,[t_score]\n"
                     + "  FROM [dbo].[MatchHistory]";
             PreparedStatement stm = connection.prepareStatement(sql);
             ResultSet rs = stm.executeQuery();
             ArrayList<MatchHistory> matchHistory = new ArrayList<>();
             while (rs.next()) {
                 MatchHistory mh = new MatchHistory();
+                MatchScore ms = new MatchScore();
                 mh.setMatchid(rs.getInt("match_id"));
                 mh.setStartTime(rs.getTimestamp("start_time"));
                 mh.setEndTime(rs.getTimestamp("end_time"));
                 mh.setOrderid(rs.getInt("order_id"));
                 mh.setState(rs.getInt("state"));
-
+                
+                ms.setCtName(rs.getString("ct_name"));
+                ms.settName(rs.getString("t_name"));
+                ms.setCtScore(rs.getInt("ct_score"));
+                ms.settScore(rs.getInt("t_score"));
+                
+                mh.setMatchScore(ms);
+                
                 matchHistory.add(mh);
             }
             return matchHistory;
@@ -383,5 +396,27 @@ public class MatchDBContext extends DBContext {
             Logger.getLogger(MatchDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
         return -1;
+    }
+
+    public boolean updateMatchScore(int match_id, int ct_score, int t_score, String ct_name, String t_name) {
+        try {
+            String sql = "UPDATE [dbo].[MatchHistory]\n"
+                    + "   SET [ct_score] = ?\n"
+                    + "      ,[t_score] = ?\n"
+                    + "      ,[ct_name] = ?\n"
+                    + "      ,[t_name] = ?\n"
+                    + " WHERE match_id = ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(5, match_id);
+            stm.setInt(1, ct_score);
+            stm.setInt(2, t_score);
+            stm.setString(3, ct_name);
+            stm.setString(4, t_name);
+            stm.executeUpdate();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(MatchDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
 }

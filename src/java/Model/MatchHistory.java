@@ -17,6 +17,15 @@ public class MatchHistory {
     private int state;
     private Timestamp startTime;
     private Timestamp endTime;
+    private MatchScore matchScore;
+
+    public MatchScore getMatchScore() {
+        return matchScore;
+    }
+
+    public void setMatchScore(MatchScore matchScore) {
+        this.matchScore = matchScore;
+    }
     
 
     public int getMatchid() {
