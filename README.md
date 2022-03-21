@@ -11,8 +11,8 @@ Basic features:
 * Support match type: BO1, BO2, BO3, BO5.
 * Auto kick player when no match is loaded to the game server.
 * Auto update match score when the current match is live.
-* Auto close match order when the match is not finished (Ex: All players disconnected when they were playing. So the match order should be close to prevent other 
-player connect to the server).
+* Auto close match order when the match is not finished (Ex: All players disconnected when they were playing. So the match order should be set to 'Not finished' 
+to prevent other player connect to the server).
 
 ## Getting Started
 
