@@ -21,6 +21,7 @@ player connect to the server).
 * [GSON by Google](https://github.com/google/gson)
 * [JDBC Driver for SQL Server](https://docs.microsoft.com/vi-vn/sql/connect/jdbc/download-microsoft-jdbc-driver-for-sql-server?view=sql-server-2017)
 * [Java Standard Tag Library]()
+* [Rest In Pawn Extension](https://github.com/ErikMinekus/sm-ripext)
 
 ### Installing & How to use
 Will be update soon
